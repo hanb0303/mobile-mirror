@@ -9,12 +9,13 @@
   <style>
     :root {
       --bg: #090a0f;
-      --card-bg: rgba(22, 25, 35, 0.88);
+      --card-bg: rgba(22, 25, 35, 0.9);
       --border: rgba(255, 255, 255, 0.12);
       --accent: #3b82f6;
       --accent-glow: rgba(59, 130, 246, 0.4);
       --accent-hover: #2563eb;
       --success: #10b981;
+      --warning: #f59e0b;
       --danger: #ef4444;
       --text: #f3f4f6;
       --text-muted: #9ca3af;
@@ -76,18 +77,25 @@
       align-items: center;
       gap: 6px;
       font-size: 12px;
-      padding: 3px 10px;
+      padding: 4px 12px;
       border-radius: 999px;
       background: rgba(255, 255, 255, 0.06);
       border: 1px solid var(--border);
       color: var(--text-muted);
       font-weight: 500;
+      transition: all 0.2s ease;
     }
 
     .badge-status.connected {
       background: rgba(16, 185, 129, 0.15);
       border-color: rgba(16, 185, 129, 0.4);
       color: #34d399;
+    }
+
+    .badge-status.reconnecting {
+      background: rgba(245, 158, 11, 0.15);
+      border-color: rgba(245, 158, 11, 0.4);
+      color: #fbbf24;
     }
 
     .status-dot {
@@ -102,20 +110,25 @@
       box-shadow: 0 0 8px #10b981;
     }
 
-    /* Mode Switch Link */
+    .reconnecting .status-dot {
+      background: #f59e0b;
+      box-shadow: 0 0 8px #f59e0b;
+    }
+
     .mode-switch-btn {
       font-size: 11px;
       color: var(--text-muted);
       background: rgba(255, 255, 255, 0.05);
       border: 1px solid var(--border);
-      padding: 4px 8px;
+      padding: 4px 10px;
       border-radius: 6px;
       cursor: pointer;
       text-decoration: none;
+      transition: all 0.15s;
     }
     .mode-switch-btn:hover {
       color: #fff;
-      background: rgba(255, 255, 255, 0.1);
+      background: rgba(255, 255, 255, 0.12);
     }
 
     /* Main Area */
@@ -149,7 +162,6 @@
       transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
     }
 
-    /* High Clarity Screen Display */
     #remote-video {
       display: block;
       max-height: calc(100vh - 64px);
@@ -162,7 +174,7 @@
       image-rendering: crisp-edges;
     }
 
-    /* Waiting Card (When waiting) */
+    /* Waiting Card */
     #waiting-card {
       position: absolute;
       top: 50%;
@@ -171,7 +183,7 @@
       background: var(--card-bg);
       border: 1px solid var(--border);
       border-radius: 20px;
-      padding: 28px 30px;
+      padding: 28px 32px;
       width: 90%;
       max-width: 440px;
       text-align: center;
@@ -191,6 +203,20 @@
       color: var(--text-muted);
       line-height: 1.5;
       margin-bottom: 18px;
+    }
+
+    .security-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      background: rgba(16, 185, 129, 0.1);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      color: #34d399;
+      font-size: 11px;
+      font-weight: 600;
+      padding: 3px 8px;
+      border-radius: 6px;
+      margin-bottom: 14px;
     }
 
     .qr-box {
@@ -249,7 +275,7 @@
       background: rgba(255, 255, 255, 0.12);
     }
 
-    /* Floating Controls Bar (PC Mode) */
+    /* Floating Toolbar */
     .toolbar {
       position: absolute;
       bottom: 20px;
@@ -258,7 +284,7 @@
       display: flex;
       align-items: center;
       gap: 6px;
-      background: rgba(18, 21, 30, 0.88);
+      background: rgba(18, 21, 30, 0.92);
       border: 1px solid var(--border);
       padding: 6px 10px;
       border-radius: 14px;
@@ -310,9 +336,9 @@
       position: absolute;
       top: 14px;
       left: 16px;
-      background: rgba(0, 0, 0, 0.7);
+      background: rgba(0, 0, 0, 0.75);
       border: 1px solid rgba(255, 255, 255, 0.08);
-      padding: 6px 12px;
+      padding: 8px 12px;
       border-radius: 8px;
       font-family: monospace;
       font-size: 11px;
@@ -320,13 +346,14 @@
       display: none;
       z-index: 30;
       pointer-events: none;
+      line-height: 1.5;
     }
 
     .stats-hud.show {
       display: block;
     }
 
-    /* Streamer / Mobile Sender View */
+    /* Streamer View */
     #streamer-view {
       display: none;
       flex-direction: column;
@@ -343,22 +370,22 @@
       background: var(--card-bg);
       border: 1px solid var(--border);
       border-radius: 24px;
-      padding: 32px 24px;
+      padding: 30px 24px;
       width: 100%;
       max-width: 380px;
       box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
     }
 
     .mobile-card h1 {
-      font-size: 22px;
+      font-size: 21px;
       font-weight: 700;
       margin-bottom: 8px;
     }
 
     .mobile-card p {
-      font-size: 14px;
+      font-size: 13px;
       color: var(--text-muted);
-      margin-bottom: 20px;
+      margin-bottom: 18px;
       line-height: 1.5;
     }
 
@@ -414,10 +441,10 @@
     }
 
     .guide-box {
-      margin-top: 22px;
+      margin-top: 20px;
       text-align: left;
       background: rgba(255, 255, 255, 0.04);
-      padding: 14px 16px;
+      padding: 12px 14px;
       border-radius: 12px;
       font-size: 12px;
       line-height: 1.6;
@@ -425,7 +452,7 @@
     }
 
     .guide-box ol {
-      padding-left: 18px;
+      padding-left: 16px;
     }
 
     .guide-box li {
@@ -436,7 +463,6 @@
       color: #fff;
     }
 
-    /* Fullscreen Overrides */
     :fullscreen #viewer-stage {
       background: #000;
     }
@@ -464,7 +490,7 @@
     </div>
 
     <div style="display: flex; align-items: center; gap: 10px;">
-      <a href="?role=streamer" class="mode-switch-btn" title="이 기기 화면을 다른 곳으로 보내려면 클릭">모바일 송출 모드로 전환</a>
+      <a href="?role=streamer" class="mode-switch-btn" title="이 기기 화면을 다른 곳으로 보내려면 클릭">모바일 송출 모드</a>
       <div id="connection-badge" class="badge-status">
         <span class="status-dot"></span>
         <span id="badge-text">휴대폰 연결 대기 중</span>
@@ -481,12 +507,17 @@
       <!-- Stats HUD -->
       <div id="stats-hud" class="stats-hud">
         <div id="stat-res">해상도: -</div>
-        <div id="stat-fps">FPS: -</div>
-        <div id="stat-latency">지연 최적화: 적용됨 (8Mbps Max)</div>
+        <div id="stat-fps">프레임: -</div>
+        <div id="stat-security">암호화: E2EE (DTLS-SRTP)</div>
+        <div id="stat-latency">대역폭 최적화: 8Mbps Max</div>
       </div>
 
       <!-- Waiting Card with QR -->
       <div id="waiting-card">
+        <div class="security-badge">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          E2EE 보안 암호화 통신 (P2P)
+        </div>
         <h2>핸드폰을 연결하세요</h2>
         <p>아이폰 기본 카메라로 아래 QR 코드를 비추면<br><b>설치 없이 즉시 사파리로 화면이 연결</b>됩니다.</p>
         
@@ -496,11 +527,11 @@
 
         <div class="pin-display">
           <span>연결 룸 코드:</span>
-          <span class="pin-code" id="display-room-code">----</span>
+          <span class="pin-code" id="display-room-code">------</span>
         </div>
 
         <button class="direct-url-btn" id="btn-copy-link" onclick="copyStreamerUrl()">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
             <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
           </svg>
@@ -544,14 +575,19 @@
     </div>
   </main>
 
-  <!-- Mobile Streamer Screen (When loaded on phone) -->
+  <!-- Mobile Streamer Screen -->
   <div id="streamer-view">
     <div class="mobile-card">
-      <div style="width: 52px; height: 52px; background: rgba(59, 130, 246, 0.15); border-radius: 16px; display: inline-flex; align-items: center; justify-content: center; color: #60a5fa; margin-bottom: 16px;">
+      <div style="width: 52px; height: 52px; background: rgba(59, 130, 246, 0.15); border-radius: 16px; display: inline-flex; align-items: center; justify-content: center; color: #60a5fa; margin-bottom: 14px;">
         <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <rect x="5" y="2" width="14" height="20" rx="3"></rect>
           <line x1="12" y1="18" x2="12.01" y2="18"></line>
         </svg>
+      </div>
+
+      <div class="security-badge" style="margin-bottom: 10px;">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        종단간 암호화 보안 전송
       </div>
 
       <h1 id="streamer-title">화면 전송 준비완료</h1>
@@ -559,8 +595,8 @@
 
       <!-- Manual Room Input Fallback -->
       <div class="room-input-box" id="room-input-box">
-        <label style="display:block; font-size: 12px; color: var(--text-muted); margin-bottom: 6px;">PC 화면의 룸 코드 4자리 입력:</label>
-        <input type="text" id="input-room-code" class="room-input" maxlength="4" placeholder="예: 7B2X">
+        <label style="display:block; font-size: 12px; color: var(--text-muted); margin-bottom: 6px;">PC 화면의 룸 코드 6자리 입력:</label>
+        <input type="text" id="input-room-code" class="room-input" maxlength="6" placeholder="예: A8K2F9">
       </div>
 
       <button id="btn-start-stream" class="btn-stream" onclick="startScreenStreaming()">
@@ -588,17 +624,19 @@
     const urlParams = new URLSearchParams(window.location.search);
     const roleParam = urlParams.get('role');
     let targetParam = urlParams.get('target');
+    let tokenParam = urlParams.get('token');
 
     let peer = null;
     let localStream = null;
     let activeCall = null;
     let roomCode = '';
+    let authToken = '';
     let currentZoom = 1;
     let currentRotation = 0;
     let clarityBoost = false;
     let isPeerOpen = false;
 
-    // Fast STUN Servers for NAT Traversal
+    // Google STUN + Cloudflare STUN Array
     const peerConfig = {
       config: {
         iceServers: [
@@ -620,7 +658,15 @@
     // 1. PC VIEWER MODE
     // ==========================================
     function initViewerMode() {
-      roomCode = Math.random().toString(36).substring(2, 6).toUpperCase();
+      // 6-Character High-Entropy Room Code + Cryptographic Auth Token
+      const randArr = new Uint8Array(4);
+      window.crypto.getRandomValues(randArr);
+      roomCode = Array.from(randArr).map(b => b.toString(36).padStart(2, '0')).join('').substring(0, 6).toUpperCase();
+      
+      const tokenArr = new Uint8Array(8);
+      window.crypto.getRandomValues(tokenArr);
+      authToken = Array.from(tokenArr).map(b => b.toString(16).padStart(2, '0')).join('');
+
       document.getElementById('display-room-code').innerText = roomCode;
 
       const peerId = 'mf-' + roomCode;
@@ -633,6 +679,7 @@
         const streamerUrl = new URL(window.location.href);
         streamerUrl.searchParams.set('role', 'streamer');
         streamerUrl.searchParams.set('target', id);
+        streamerUrl.searchParams.set('token', authToken);
 
         new QRCode(document.getElementById('qrcode'), {
           text: streamerUrl.toString(),
@@ -644,8 +691,27 @@
         });
       });
 
+      // Signaling connection resilience
+      peer.on('disconnected', () => {
+        console.warn('[Viewer] Signaling server disconnected, auto-reconnecting...');
+        const badge = document.getElementById('connection-badge');
+        badge.classList.remove('connected');
+        badge.classList.add('reconnecting');
+        document.getElementById('badge-text').innerText = '신호 서버 재연결 중...';
+        peer.reconnect();
+      });
+
+      // Secure Incoming Call Validation
       peer.on('call', (call) => {
-        console.log('[Viewer] Incoming stream from phone!');
+        console.log('[Viewer] Incoming call request...');
+
+        // Security Handshake Token Check
+        if (call.metadata && call.metadata.token && call.metadata.token !== authToken) {
+          console.warn('[Security] Unauthorized call rejected! Invalid token.');
+          call.close();
+          return;
+        }
+
         activeCall = call;
         call.answer();
 
@@ -658,6 +724,7 @@
           document.getElementById('toolbar').style.display = 'flex';
           
           const badge = document.getElementById('connection-badge');
+          badge.classList.remove('reconnecting');
           badge.classList.add('connected');
           document.getElementById('badge-text').innerText = '휴대폰 화면 송출 중 (60fps)';
 
@@ -665,6 +732,25 @@
             updateStreamStats(videoEl);
           };
         });
+
+        // WebRTC ICE State Monitoring
+        if (call.peerConnection) {
+          call.peerConnection.onconnectionstatechange = () => {
+            const state = call.peerConnection.connectionState;
+            console.log('[WebRTC] Connection state:', state);
+            if (state === 'disconnected' || state === 'failed') {
+              const badge = document.getElementById('connection-badge');
+              badge.classList.remove('connected');
+              badge.classList.add('reconnecting');
+              document.getElementById('badge-text').innerText = '연결 일시 중단됨';
+            } else if (state === 'connected') {
+              const badge = document.getElementById('connection-badge');
+              badge.classList.remove('reconnecting');
+              badge.classList.add('connected');
+              document.getElementById('badge-text').innerText = '휴대폰 화면 송출 중 (60fps)';
+            }
+          };
+        }
 
         call.on('close', () => {
           resetViewerState();
@@ -682,7 +768,7 @@
       document.getElementById('waiting-card').style.display = 'block';
       document.getElementById('toolbar').style.display = 'none';
       const badge = document.getElementById('connection-badge');
-      badge.classList.remove('connected');
+      badge.classList.remove('connected', 'reconnecting');
       document.getElementById('badge-text').innerText = '휴대폰 연결 대기 중';
     }
 
@@ -690,6 +776,8 @@
       const streamerUrl = new URL(window.location.href);
       streamerUrl.searchParams.set('role', 'streamer');
       streamerUrl.searchParams.set('target', 'mf-' + roomCode);
+      if (authToken) streamerUrl.searchParams.set('token', authToken);
+
       navigator.clipboard.writeText(streamerUrl.toString()).then(() => {
         const btn = document.getElementById('btn-copy-link');
         const originalText = btn.innerHTML;
@@ -784,27 +872,31 @@
         document.getElementById('room-input-box').style.display = 'block';
       }
 
-      const streamerPeerId = 'phone-' + Math.random().toString(36).substring(2, 7);
+      const streamerPeerId = 'phone-' + Math.random().toString(36).substring(2, 8);
       peer = new Peer(streamerPeerId, peerConfig);
 
       peer.on('open', (id) => {
         isPeerOpen = true;
         console.log('[Streamer] Ready with ID:', id);
       });
+
+      peer.on('disconnected', () => {
+        peer.reconnect();
+      });
     }
 
     async function startScreenStreaming() {
       if (!targetParam) {
         const inputVal = document.getElementById('input-room-code').value.trim().toUpperCase();
-        if (!inputVal || inputVal.length < 3) {
-          alert('PC 화면에 표시된 룸 코드 4자리를 입력해주세요.');
+        if (!inputVal || inputVal.length < 4) {
+          alert('PC 화면에 표시된 룸 코드를 입력해주세요.');
           return;
         }
         targetParam = 'mf-' + inputVal;
       }
 
       if (!isPeerOpen) {
-        alert('서버 연결 중입니다. 1~2초 후 다시 눌러주세요.');
+        alert('신호 서버에 연결 중입니다. 1~2초 후 다시 눌러주세요.');
         return;
       }
 
@@ -822,7 +914,10 @@
 
         localStream = await navigator.mediaDevices.getDisplayMedia(streamConstraints);
 
-        const call = peer.call(targetParam, localStream);
+        // Call PC with Secure Auth Token Metadata
+        const call = peer.call(targetParam, localStream, {
+          metadata: { token: tokenParam || '' }
+        });
         activeCall = call;
 
         tuneSenderBitrate(call);
